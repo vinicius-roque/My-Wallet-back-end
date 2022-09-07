@@ -1,0 +1,17 @@
+{
+  "name": "projeto13-mywallet-back",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {},
+  "keywords": [],
+  "author": "Vinícius Roque",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.2",
+    "express": "^4.18.1",
+    "mongodb": "^4.9.1"
+  }
+}
