@@ -11,8 +11,12 @@ const transactionSchema = joi.object({
 });
 
 async function createTransaction (req, res) {
-    const { authorization } = req.headers;
-    const token = authorization?.replace('Bearer ', '');
+    const vaidation = transactionSchema.validate(req.body, { abortEarly:false });
+
+    if(validation.error) {
+        const errors = validation.error.details.map(error => error.message);
+        return res.status(422).send(errors);
+    }
 
     if(!token) {
         return res.sendStatus(401);
@@ -26,19 +30,9 @@ async function createTransaction (req, res) {
         return res.status(422).send(errors);
     }
 
+    const user = res.locals.user;
+
     try {
-        const session = await db.collection('sessions').findOne({ token });
-
-        if(!session) {
-            return res.sendStatus(401);
-        }
-
-        const user = await db.colletion('users').findOne({ _id: session.userId});
-
-        if(!user) {
-            return res.sendStatus(401);
-        }
-
         const { type, date, description, value } = req.body;
 
         await db.collection('transactions').insertOne({
@@ -56,21 +50,10 @@ async function createTransaction (req, res) {
 }
 
 async function catchUserTransactions (req, res) {
-    const { authorization } = req.headers;
-    const token = authorization?.replace('Bearer ', '');
-
-    if(!token) {
-        return res.sendStatus(401);
-    }
+    const user = res.locals.user;
 
     try {
-        const session = await db.collection('sessions').findOne({ token });
-
-        if(!session) {
-            return res.sendStatus(401);
-        }
-
-        const transactions = await db.collection('transactions').find({ userId: session.userId }).toArray();
+        const transactions = await db.collection('transactions').find({ userId: user._id }).toArray();
 
         return res.send(transactions);
     } catch (error) {
