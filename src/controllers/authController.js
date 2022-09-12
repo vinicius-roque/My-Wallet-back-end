@@ -39,7 +39,7 @@ async function signIn (req, res) {
             });
             return res.send({ token, name: user.name});
         } else {
-            return sendStatus(404);
+            return res.sendStatus(404);
         }
     } catch (error) {
         return res.status(500).send(error.message);
