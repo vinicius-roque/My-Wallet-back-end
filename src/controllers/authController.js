@@ -91,7 +91,6 @@ async function analiseUser(email) {
         answer = error.message;
     }
     return answer;
-
 }
 
 export { signIn, signUp };

@@ -11,25 +11,13 @@ const transactionSchema = joi.object({
 });
 
 async function createTransaction (req, res) {
-    const vaidation = transactionSchema.validate(req.body, { abortEarly:false });
-
-    if(validation.error) {
-        const errors = validation.error.details.map(error => error.message);
-        return res.status(422).send(errors);
-    }
-
-    if(!token) {
-        return res.sendStatus(401);
-    }
-
     const validation = transactionSchema.validate(req.body, { abortEarly: false });
-
-    if(validation.error) {
+    if (validation.error) {
         const errors = validation.error.details.map(error => error.message);
-
         return res.status(422).send(errors);
+        
     }
-
+    
     const user = res.locals.user;
 
     try {
@@ -40,7 +28,7 @@ async function createTransaction (req, res) {
             type,
             date,
             description,
-            value
+            value,
         });
 
         return res.sendStatus(201);
@@ -51,14 +39,13 @@ async function createTransaction (req, res) {
 
 async function catchUserTransactions (req, res) {
     const user = res.locals.user;
-
     try {
         const transactions = await db.collection('transactions').find({ userId: user._id }).toArray();
-
+    
         return res.send(transactions);
     } catch (error) {
         return res.status(500).send(error.message);
-    }
+    } 
 }
 
 export { createTransaction, catchUserTransactions };

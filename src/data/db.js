@@ -11,7 +11,7 @@ try {
     console.log(error.message);
 }
 
-const dbName = 'My-Wallet';
+const dbName = 'MyWallet';
 const db = mongoClient.db(dbName);
 
 export default db;
